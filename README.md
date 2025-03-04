@@ -87,7 +87,7 @@ python scripts/data_prepare.py \
 - [ ] Release the checkpoints.
 - [ ] Release the technical report.
 - [ ] Release the evaluation results & evaluation codes.
-- [ ] Complect the experiments on dataset3.
+- [ ] Complete the experiments on dataset3.
 
 ## Acknowledge
 
