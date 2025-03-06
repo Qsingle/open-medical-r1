@@ -12,28 +12,37 @@ Similar to the paper [MED-RLVR](https://arxiv.org/pdf/2502.19655), we have tried
 
 ### Settings
 
-We train the model on 4 Nvidia Tesla A100 40GB SXM GPUs and implement it based on the Open-R1. We removed the cosine reward and reasoning reward, and we found that the cosine reward may lead to the completion being shorter in our experiments. We hypothesise that the model makes it hard to sample the correct answer when the domain knowledge is lacking, and we think the model can give its reasoning steps.
+The model was trained on 4 NVIDIA Tesla A100 40GB SXM GPUs using the Open-R1 framework. We removed both cosine similarity reward and reasoning process reward components. Experimental results indicate that the observed response length constraints under cosine reward mechanisms are directly attributable to insufficient domain knowledge - the model's inability to form valid answers under knowledge deficits creates premature output truncation. This knowledge-dependent length limitation represents the root cause of sampling challenges. However, the model can generate a chain of thought to solve the problem naturally, so we think the reasoning and cosine rewards are not essential. 
 
 ### Metric Results
 
-We evaluate the model at MedMCQA, MedQA-USMLE, PubMedQA, MMLU-Pro Medical, GPQA Medical, and MedXpertQA.
+We evaluated the model's performance across six medical benchmarks: MedMCQA, MedQA-USMLE, PubMedQA, MMLU-Pro Medical, GPQA Medical, and MedXpertQA, with results presented in Tab. 1. Unexpectedly, post-training performance degradation was observed compared to baseline metrics. We hypothesize that insufficient training duration and limited sample size may account for this degradation, which will be systematically investigated in follow-up experiments.
+
+As shown in Tab. 1, the model trained on Dataset 2 demonstrates superior and more consistent performance across all benchmarks. This suggests that a balanced composition of complex and straightforward cases in training data may facilitate both performance stability and reasoning capability development.
+
+Notably, Dataset 3 - exclusively comprising complex cases - enabled the best performance on MedMCQA and MedQA-USMLE benchmarks compared to Datasets 1 and 2. This phenomenon might be attributed to the chain-of-thought (CoT) generation capability fostered by exposure to intricate medical reasoning patterns, indicating that complex case training could enhance problem-solving strategies in standardized medical examinations.
+
+<center><strong>Tab. 1 Evaluation metric.</strong></center>
 
 |      Model      | MedMCQA | MedQA-USMLE | PubMedQA | MMLU-Pro Medical | GPQA Medical | MedXpertQA |
 | :-------------: | :---------:  | :----------: | :------: | :--------------: | :----------: | :--------: |
-| HuatuoGPT-o1-7B | 63.57 | 71.56 | 78.50 | 67.17 | 52.56 |\|
-|   Our(Dataset1)    | \ | \ | \ | \ | \ |\|
-|   Our(Dataset2)    | \ | \ | \ | \ | \ |\|
-|   Our(Dataset3)    | \ | \ | \ | \ | \ |\|
+|     QwQ-32B     |  67.32  |    80.13    |  75.80   |      73.88       |    60.77     |   20.92    |
+| HuatuoGPT-o1-7B | 63.57 | 71.56 | 78.50 | 67.17 | 52.56 | 15.51 |
+|   Our(Dataset1)    | 51.64 | 55.53 | 74.70 | 58.04 | 41.79 | 14.89 |
+|   Our(Dataset2)    |  52.61  | 54.91 | 76.80 | 58.17 | 45.38 | 15.36 |
+|   Our(Dataset3)    | 55.01 | 56.48 | 76.50 | 50.81 | 36.66 | 12.60 |
 
 ### Logs
 
-Fig.1 shows the experiments conducted on the dataset1. From the picture, we can observe that the length of the competition is large, the reward is higher, and a decrease in the length may result in a lower reward.
+As illustrated in Fig. 1, experimental results from Dataset 1 reveal a positive correlation between output length and reward magnitude. The observed trend demonstrates that increased response length corresponds to higher reward values, while reductions in output length lead to diminished reward signals - indicating a possible inherent length-reward dependency in the model's optimization framework.
 
 ![log_dataset1](assets/log_dataset1.png)
 
 **Fig. 1 The training log for experiments on dataset1.**
 
-Then, we also checked the model's output during training. We found a phenomenon like "Aha Moment" in Deepseek's technical report. Fig.2 is one sample; the red box labels the content that seems to be self-validation of the model. But the model may think of the problem twice, and we think it may caused by the base model. In our experiments, this phenomenon will resolved if we mix the MedXpertQA data to train the model. We conjecture that the complex reasoning data may improve the model's performance better.
+Furthermore, we analyzed the model's output during training and observed a phenomenon reminiscent of the "Aha Moment" described in Deepseek's technical report. As illustrated in Fig. 2, the red bounding box highlights what appears to be the model's self-validation mechanism. However, we noted instances where the model appears to re-examine problems, which we hypothesize may be attributed to the base model's behavior.
+
+Interestingly, our experiments demonstrate that this phenomenon is mitigated when incorporating MedXpertQA dataset into the training process. We posit that exposure to complex reasoning data enhances the model's capability to achieve more consistent performance through improved generation strategy.
 
 ![out_dataset1](assets/model_out_dataset1.png)
 
@@ -51,7 +60,19 @@ Similar to the experiment on the dataset2, we also found the self-validation ste
 
 **Fig.4 The sample for the self-validation of the model trained on dataset2.**
 
-Our experiment on dataset3 was interrupted due to other reasons, but we will resume it as soon as possible if conditions allow. We observed that the model faces significant challenges in training on this dataset. Notably, the model's outputs tend to be excessively long, often exceeding the maximum output length of 8192 tokens that we configured. We believe this difficulty arises because the model struggles with the reasoning required for this task, likely due to a lack of the necessary knowledge to perform effectively in this context. We also find that the model tries to think multiple times to solve the problem, but the length is not enough. We may explore the length of the model's output to check if it helps the model to solve a complex problem.
+In Dataset 3, the model struggles to generate accurate answers while producing excessively long responses, as evidenced by Fig. 5.
+
+![log_exp3](assets/log_dataset3.png)
+**Fig.5 The training log for experiments on dataset3.**
+
+Although Fig. 6 reveals the model's capacity to develop systematic reasoning pathways with iterative self-correction attempts, the final output paradoxically deviates from both the expected answer format and the logical conclusions suggested by its own cognitive trajectory.
+
+![exp3_example](assets/exp3_example.png)
+**Fig.6 The sample for the self-validation of the model trained on dataset3.**
+
+## Conclusion
+
+Our experiments demonstrate that reinforcement learning holds significant potential for addressing challenges in vertical domains such as healthcare. However, the construction of training datasets requires careful consideration of the ratio between complex and simple examples. Experimental results confirm that complex examples facilitate the formation of extended chain-of-thought reasoning. Furthermore, successful implementation in vertical domain training necessitates the development of more rational reward assignment criteria. The strategic incorporation of domain-specific knowledge also emerges as a critical factor for effective application.
 
 ## Usage
 
@@ -70,6 +91,8 @@ ACCELERATE_LOG_LEVEL=info TRANSFORMERS_VERBOSITY=info accelerate launch \
             src/open_r1/$TASK.py --config recipes/HuatuoGPT-o1/grpo/config_medxpert_usmle.yaml
 ```
 
+
+
 ## Data prepare
 
 We suggest using one dataset containing easy and hard samples to help the model learn better and generate the correct chain of thought. Curriculum learning and mixing the complex and easy samples in one batch may help the training.  You can use our provide scripts to prepare the data from [MedXpertQA](https://huggingface.co/datasets/TsinghuaC3I/MedXpertQA) dataset and [MedQA-USMLE](https://github.com/jind11/MedQA) dataset.
@@ -84,10 +107,10 @@ python scripts/data_prepare.py \
 ## TODO
 
 - [x] Release the code.
-- [ ] Release the checkpoints.
+- [ ] Release the checkpoints. We will try to train the model on more samples to improve the model's performance and release the checkpoints as soon as possible.
 - [ ] Release the technical report.
-- [ ] Release the evaluation results & evaluation codes.
-- [ ] Complete the experiments on dataset3.
+- [x] Release the evaluation results & evaluation codes.
+- [x] Complete the experiments on dataset3.
 
 ## Acknowledge
 
@@ -97,10 +120,12 @@ python scripts/data_prepare.py \
 
 [HuatuoGPT-o1](https://github.com/FreedomIntelligence/HuatuoGPT-o1)
 
+We acknowledge the Department of Computer Science and Technology's HPC, Southern University of Science and technology provide the GPU resource to help us complete the experiments.
+
 ## Future Plan
 
-+ Use existing models to construct a QA dataset that differentiates difficulty levels.
-+ Explore the ratio of easy to difficult data and how to split the data during training.
-+ Investigate enabling the model to learn to use tool calls to retrieve knowledge from a local knowledge base for reasoning. E.g. [Search-R1](https://github.com/PeterGriffinJin/Search-R1)
-+ Explore the reinforcement learning algorithm for multi-modality scenes.
-
++ Develop a hierarchical QA dataset using pre-trained models with explicit difficulty grading to enable systematic analysis of learning dynamics across complexity levels
++ Investigate curriculum learning strategies through systematic analysis of easy-to-difficult data ratios and phased training configurations to optimize knowledge acquisition trajectories
++ Implement tool-augmented reasoning frameworks that integrate model-driven knowledge retrieval from domain-specific databases (e.g., Search-R1 architecture) for enhanced decision support capabilities
++ Design multimodal reinforcement learning algorithms incorporating cross-modal alignment mechanisms to address heterogeneous data integration in real-world scenarios
++ Secure dedicated GPU resources to conduct large-scale RL experiments for LLM fine-tuning in specialized domains like medical diagnosis, requiring both computational intensity and domain-specific safety validation
