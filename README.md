@@ -120,7 +120,7 @@ python scripts/data_prepare.py \
 
 [HuatuoGPT-o1](https://github.com/FreedomIntelligence/HuatuoGPT-o1)
 
-We gratefully acknowledge the support from the Department of Computer Science and Technology at Southern University of Science and Technology, whose High-Performance Computing (HPC) platform generously provided GPU resources that facilitated the completion of our experiments.
+We gratefully acknowledge the support from the Department of Computer Science and Engineering at Southern University of Science and Technology, whose High-Performance Computing (HPC) platform generously provided GPU resources that facilitated the completion of our experiments.
 
 ## Future Plan
 
