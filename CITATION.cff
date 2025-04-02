@@ -1,0 +1,34 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Open-Medical-R1
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Zhongxi
+    family-names: Qiu
+  - given-names: Zhang
+    family-names: Zhang
+  - given-names: Yan
+    family-names: Hu
+  - given-names: Heng
+    family-names: Li
+  - given-names: Jiang
+    family-names: Liu
+identifiers:
+  - type: url
+    value: 'https://github.com/Qsingle/open-medical-r1'
+    description: Github
+repository-code: 'https://github.com/Qsingle/open-medical-r1'
+abstract: >-
+  Exploring the GRPO(Group Relative Policy Optimization) in
+  the medical domain.
+keywords:
+  - Large Language Model
+  - GRPO
+  - Smart Medical
+license: MIT
+version: '0.1'
