@@ -1,5 +1,11 @@
 # Medical R1-Zero Reproduce
 
+## News
+
++ **2025.04.07** Release the weights for [Gemma-3-12b-it-grpo](https://huggingface.co/qiuxi337/gemma-3-12b-it-grpo) that trained on 500 samples by LoRA.
++ **2025.04.02** Release the weights for [Gemma-3-12b-bnb-grpo](https://huggingface.co/qiuxi337/gemma-3-12b-bnb-grpo) that trained on 500 samples by Q-LoRA.
++ **2025.03.04** Release the codes and initial report.
+
 ## Model and Dataset
 
 Similar to the paper [MED-RLVR](https://arxiv.org/pdf/2502.19655), we have tried the Qwen2.5-1.5B, Qwen2.5-3B, and Qwen2.5-7B as the base model and train by the GRPO. However, the model can not occur the "aha moment", which is the self-validation behaviour. The model's behaviour during training is similar to MED-RLVR, so we do not report the results of these models. We conjecture the model's behaviour is related to the knowledge and the training data. Thus, we use the [HuatuoGPT-o1-7B](https://huggingface.co/FreedomIntelligence/HuatuoGPT-o1-7B) as the base model to do the experiments on the following three datasets:
@@ -104,10 +110,17 @@ python scripts/data_prepare.py \
 		--output_dir ./output/xpert_usmle
 ```
 
+## Weights
+
+|   Base model   | Quantization |  LoRA  | Samples |                             Link                             |
+| :------------: | :----------: | :----: | :-----: | :----------------------------------------------------------: |
+| Gemma-3-12b-it |     N/A      |  LoRA  |   500   | 🤗[huggingface](https://huggingface.co/qiuxi337/gemma-3-12b-it-grpo) |
+| Gemma-3-12b-it |     4bit     | Q-LoRA |   500   | 🤗[huggingface](https://huggingface.co/qiuxi337/gemma-3-12b-bnb-grpo) |
+
 ## TODO
 
 - [x] Release the code.
-- [ ] Release the checkpoints. We will try to train the model on more samples to improve the model's performance and release the checkpoints as soon as possible.
+- [x] Release the checkpoints. 
 - [ ] Release the technical report.
 - [x] Release the evaluation results & evaluation codes.
 - [x] Complete the experiments on dataset3.
