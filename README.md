@@ -4,7 +4,7 @@
 
 + **2025.04.07** Release the weights for [Gemma-3-12b-it-grpo](https://huggingface.co/qiuxi337/gemma-3-12b-it-grpo) that trained on 500 samples by LoRA.
 + **2025.04.02** Release the weights for [Gemma-3-12b-bnb-grpo](https://huggingface.co/qiuxi337/gemma-3-12b-bnb-grpo) that trained on 500 samples by Q-LoRA.
-+ **2025.03.04** Release the codes and initial report.
++ **2025.03.04** Release the codes and [initial report](https://arxiv.org/pdf/2504.13950).
 
 ## Model and Dataset
 
@@ -121,7 +121,7 @@ python scripts/data_prepare.py \
 
 - [x] Release the code.
 - [x] Release the checkpoints. 
-- [ ] Release the technical report.
+- [x] Release the technical report.
 - [x] Release the evaluation results & evaluation codes.
 - [x] Complete the experiments on dataset3.
 
